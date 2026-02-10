@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>WePASEC LLC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: monospace;
+    }
+
+    #bg-text {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      color: rgba(255, 255, 255, 0.05);
+      /* faint, subtle */
+      font-size: 24px;
+      line-height: 24px;
+      white-space: pre-wrap;
+      pointer-events: none;
+      /* text is not selectable/clickable */
+      user-select: none;
+      z-index: 0;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      display: block;
+    }
+
+    #gif-bottom {
+      transform: scaleY(-1) scaleX(-1);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="wrapper" style="position: relative; width: 100%; height: 100%;">
+    <div id="bg-text"></div>
+    <canvas id="screen"></canvas>
+    <img id="gif-top" src="fire.gif" style="position: absolute; pointer-events: none;">
+    <img id="gif-bottom" src="fire.gif" style="position: absolute; pointer-events: none;">
+  </div>
+
+  <script>
+    const canvas = document.getElementById('screen');
+    const ctx = canvas.getContext('2d');
+    const bgTextDiv = document.getElementById('bg-text');
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const bgString = "Western Pennsylvania Subwoofer Enthusiasts Club ";
+      const fontSize = 24;
+      const cols = Math.ceil(canvas.width / (bgString.length * 14)); // rough width per char
+      const rows = Math.ceil(canvas.height / fontSize);
+
+      let textContent = '';
+      for (let i = 0; i < rows; i++) {
+        textContent += bgString.repeat(cols) + '\n';
+      }
+      bgTextDiv.textContent = textContent;
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    const logo = {
+      lines: [
+        " _  _  _       ______ _______  ______ _______ _______ ",
+        "(_)(_)(_)     (_____ (_______)/ _____|_______|_______)",
+        " _  _  _ _____ _____) )______( (____  _____   _       ",
+        "| || || | ___ |  ____/  ___  |\\____ \\|  ___) | |      ",
+        "| || || | ____| |    | |   | |_____) ) |_____| |_____ ",
+        " \\_____/|_____)_|    |_|   |_(______/|_______)\\______)",
+      ],
+      lineHeight: 18,
+      x: 300,
+      y: 100,
+      vx: 2,
+      vy: 2,
+      color: '#ffffff',
+      width: 0,
+      height: 48
+    };
+    function randomColor() {
+      const colors = [
+        "#ffffff", "#ffff00",
+        "#ff0000", "#00ff00", "#00ffff", "#ff00ff"
+      ];
+
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    const gifTop = document.getElementById('gif-top');
+    const gifBottom = document.getElementById('gif-bottom');
+
+    // Update GIF position each frame relative to logo
+    function updateGifPosition() {
+      gifTop.style.left = logo.x + 'px';
+      gifTop.style.top = (logo.y - gifTop.height) + 'px'; // above text
+      gifBottom.style.left = logo.x + 'px';
+      gifBottom.style.top = (logo.y + logo.height + logo.lineHeight) + 'px'; // below text
+    }
+
+
+    function drawLogo() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = logo.color;
+      ctx.font = logo.lineHeight + 'px Courier';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+
+      logo.width = 0;
+      logo.height = logo.lines.length * logo.lineHeight;
+
+      logo.lines.forEach((line, i) => {
+        const metrics = ctx.measureText(line);
+        logo.width = Math.max(logo.width, metrics.width);
+        ctx.fillText(line, logo.x, logo.y + i * logo.lineHeight);
+      });
+    }
+
+    function update() {
+      logo.x += logo.vx;
+      logo.y += logo.vy;
+
+      if (logo.x <= 0 || logo.x + logo.width >= canvas.width) {
+        logo.vx *= -1;
+        logo.color = randomColor();
+      }
+
+      if (logo.y - gifTop.height <= 0 || logo.y + logo.height + gifBottom.height >= canvas.height) {
+        logo.vy *= -1;
+        logo.color = randomColor();
+      }
+
+      drawLogo();
+      updateGifPosition();
+      requestAnimationFrame(update);
+    }
+
+    update();
+  </script>
+</body>
+
+</html>
