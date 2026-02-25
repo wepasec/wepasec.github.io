@@ -115,20 +115,24 @@ const logo = {
   height: 48
 };
 
-function randomColor() {
+function randomColor(currentColor) {
   const colors = [
     "#ffffff", "#ffff00",
     "#ff0000", "#00ff00", "#00ffff", "#ff00ff"
   ];
 
-  return colors[Math.floor(Math.random() * colors.length)];
+  let next = currentColor;
+  while (next === currentColor) {
+    next = colors[Math.floor(Math.random() * colors.length)];
+  }
+  return next;
 }
 
 function drawLogo() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = logo.color;
 
-  // Responsive logo sizing: smaller text on smaller screens
+  // Logo sizing (smaller text on smaller screens)
   if (canvas.width < 480) {
     logo.lineHeight = 8;
   } else if (canvas.width < 768) {
@@ -151,7 +155,7 @@ function drawLogo() {
   });
 }
 
-function update() {
+function updateLogoDirection() {
   if (logo.vx > 0 && logo.vy > 0) {
     logo.lines = logose;
   } else if (logo.vx > 0 && logo.vy <= 0) {
@@ -161,19 +165,24 @@ function update() {
   } else {
     logo.lines = logosw;
   }
+}
 
+function update() {
+  // Randomize color, update position
+  logo.color = '#'+(Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');  
   logo.x += logo.vx;
   logo.y += logo.vy;
 
+  // Bounce off edges
   if (logo.x <= 0 || logo.x + logo.width >= canvas.width) {
     logo.vx *= -1;
-    logo.color = randomColor();
   }
-
   if (logo.y <= 0 || logo.y + logo.height >= canvas.height) {
     logo.vy *= -1;
-    logo.color = randomColor();
   }
+
+  // Update logo direction (change ASCII art)
+  updateLogoDirection();
 
   drawLogo();
   requestAnimationFrame(update);
