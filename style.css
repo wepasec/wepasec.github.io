@@ -104,3 +104,50 @@ footer a {
 footer a:hover {
   text-decoration: underline;
 }
+
+
+.events-container {
+  margin-top: 2rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.event-card {
+  border: 1px solid #ccc;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: #111;
+  color: #fff;
+}
+
+.event-title {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.event-card p {
+  margin: 0.4rem 0;
+}
+
+.event-button {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #e63946;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.event-button:hover {
+  background-color: #c1121f;
+}
+
+@media (min-width: 1024px) {
+  .events-container {
+    max-width: 60%; /* Make the events container width smaller on large screens */
+    margin: 0 auto;
+  }
+}
