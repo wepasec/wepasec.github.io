@@ -113,20 +113,35 @@ footer a:hover {
 }
 
 .event-card {
-  border: 1px solid #ccc;
-  padding: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  border: 1px solid #fff;
+  padding: 16px;
   border-radius: 8px;
-  background-color: #111;
-  color: #fff;
+  max-width: 600px;
+  background: #111;
+}
+
+.event-thumb {
+  width: 140px;
+  height: auto;
+  border-radius: 6px;
+}
+
+.event-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  align-items: flex-start;
 }
 
 .event-title {
-  margin-top: 0;
-  margin-bottom: 1rem;
+  margin: 0 0 8px 0;
 }
 
-.event-card p {
-  margin: 0.4rem 0;
+.event-info p {
+  margin: 2px 0;
 }
 
 .event-button {
@@ -149,5 +164,17 @@ footer a:hover {
   .events-container {
     max-width: 60%; /* Make the events container width smaller on large screens */
     margin: 0 auto;
+  }
+}
+
+/* image above text in event cards on mobile */
+@media (max-width: 600px) {
+  .event-card {
+    flex-direction: column;
+  }
+
+  .event-thumb {
+    width: 100%;
+    height: auto;
   }
 }
