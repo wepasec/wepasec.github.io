@@ -1,0 +1,15 @@
+---
+layout: layouts/main.njk
+title: past events @ COLLAPSE
+description: TODO
+---
+
+<h1>Past Events</h1>
+
+{%- if collections.pastevents | length > 0 -%}
+  {%- for event in collections.pastevents -%}
+    {%- include "event-card.njk" -%}
+  {%- endfor -%}
+{%- else -%}
+  <p>No information available.</p>
+{%- endif -%}

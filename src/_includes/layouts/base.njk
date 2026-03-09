@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{{ title | default(site.siteName) }}</title>
+
+    {% if description %}
+    <meta name="description" content="{{ description }}" />
+    {% endif %}
+
+    <link rel="icon" href="/assets/favicon.ico" />
+    <link rel="stylesheet" href="/assets/style.css" />
+
+    {# Open Graph / SEO #}
+    <meta property="og:title" content="{{ title | default(site.siteName) }}" />
+    {% if description %}
+    <meta property="og:description" content="{{ description }}" />
+    {% endif %}
+  </head>
+  <body>
+    {% include "navbar.njk" %} {{ content | safe }} {% include "footer.njk" %}
+    
+    {% if extraScript %}
+    <script src="{{ extraScript }}" defer></script>
+    {% endif %}
+  </body>
+</html>

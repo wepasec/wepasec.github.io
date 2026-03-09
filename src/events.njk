@@ -1,0 +1,16 @@
+---
+layout: layouts/main.njk
+title: upcoming events @ COLLAPSE
+description: TODO
+---
+
+<h1>Upcoming Events</h1>
+
+{%- if collections.upcomingevents | length > 0 -%}
+  {%- for event in collections.upcomingevents -%}
+    {%- include "event-card.njk" -%}
+  {%- endfor -%}
+{%- else -%}
+  <p>None yet announced.. stay tuned.</p>
+{%- endif -%}
+                                                                    

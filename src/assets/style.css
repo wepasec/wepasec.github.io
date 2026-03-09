@@ -63,7 +63,6 @@ canvas {
 #header-row a {
   color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
-  text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
@@ -71,7 +70,8 @@ canvas {
   text-decoration: underline;
 }
 
-#header-row #nav-current {
+#header-row .nav-current {
+  font-weight: bold;
   text-decoration: underline;
 }
 
@@ -106,7 +106,7 @@ footer a:hover {
 }
 
 
-.events-container {
+.main-container {
   margin-top: 2rem;
   display: grid;
   gap: 1.5rem;
@@ -161,8 +161,8 @@ footer a:hover {
 }
 
 @media (min-width: 1024px) {
-  .events-container {
-    max-width: 60%; /* Make the events container width smaller on large screens */
+  .main-container {
+    max-width: 60%;
     margin: 0 auto;
   }
 }
