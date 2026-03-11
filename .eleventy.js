@@ -5,35 +5,35 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("./src/assets/homepage.js");
   eleventyConfig.addPassthroughCopy("./src/assets/popup.js");
 
-  // Base events collection
-  eleventyConfig.addCollection("events", function (collectionApi) {
+  // Function builds, filters, and sorts an events collection
+  function buildEvents(collectionApi) {
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const events = collectionApi.getFilteredByGlob("./src/events/*.md");
-
-    events.forEach((event) => {
-      const eventDate = new Date(event.data.date);
-      event.data.upcoming = eventDate >= today;
+    today.setUTCHours(0, 0, 0, 0);
+    let events = collectionApi.getFilteredByGlob("./src/events/*.md");
+    // Tag events as 'upcoming' based on current date/time
+    events.forEach(event => {
+      event.data.upcoming = new Date(event.data.date) >= today;
     });
+    // For production, filter out draft/test events
+    if (process.env.ELEVENTY_ENV === "production") {
+      events = events.filter(e => e.data.draft !== true);
+    }
+    return events;
+  }
 
-    return events.sort((a, b) => new Date(a.data.date) - new Date(b.data.date));
-  });
+  // Build upcoming events collection
+  eleventyConfig.addCollection("upcomingevents", api =>
+    buildEvents(api)
+      .filter(e => e.data.upcoming)
+      .sort((a, b) => new Date(a.data.date) - new Date(b.data.date))
+  );
 
-  // Upcoming events (reuse events collection)
-  eleventyConfig.addCollection("upcomingevents", function (collectionApi) {
-    return collectionApi
-      .getFilteredByGlob("./src/events/*.md")
-      .filter((event) => event.data.upcoming);
-  });
-
-  // Past events (reuse events collection)
-  eleventyConfig.addCollection("pastevents", function (collectionApi) {
-    return collectionApi
-      .getFilteredByGlob("./src/events/*.md")
-      .filter((event) => !event.data.upcoming)
-      .sort((a, b) => new Date(b.data.date) - new Date(a.data.date));
-  });
+  // Build past events collection
+  eleventyConfig.addCollection("pastevents", api =>
+    buildEvents(api)
+      .filter(e => !e.data.upcoming)
+      .sort((a, b) => new Date(b.data.date) - new Date(a.data.date))
+  );
 
   return {
     dir: {
