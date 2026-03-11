@@ -1,9 +1,15 @@
 module.exports = function (eleventyConfig) {
+  const isProd = process.env.ELEVENTY_ENV === "production";
   // Pass through static assets
   eleventyConfig.addPassthroughCopy("./src/assets/images");
   eleventyConfig.addPassthroughCopy("./src/assets/style.css");
   eleventyConfig.addPassthroughCopy("./src/assets/homepage.js");
   eleventyConfig.addPassthroughCopy("./src/assets/popup.js");
+
+  // Pass through additional assets outside of production builds
+  if (!isProd) {
+    eleventyConfig.addPassthroughCopy("src/assets/dev");
+  }
 
   // Function builds, filters, and sorts an events collection
   function buildEvents(collectionApi) {
@@ -15,7 +21,7 @@ module.exports = function (eleventyConfig) {
       event.data.upcoming = new Date(event.data.date) >= today;
     });
     // For production, filter out draft/test events
-    if (process.env.ELEVENTY_ENV === "production") {
+    if (isProd) {
       events = events.filter(e => e.data.draft !== true);
     }
     return events;

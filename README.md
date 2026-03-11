@@ -7,9 +7,12 @@ To get started with local development & the static site generator:
 ```
 npm install
 
-npm run build  # builds site in _site folder
+npm run build-dev  # build static site in `dist` folder
+npm run serve-dev  # build and serve site at http://localhost:8080
 
-npx @11ty/eleventy --serve  # builds and serves site at http://localhost:8080
+# in production mode, 'assets/dev' and draft events are ignored
+npm run build-prod
+npm run serve-prod
 ```
 
 ## Add events workflow
@@ -25,6 +28,7 @@ end: LATE                        # string; end time of the event
 price: $15 advance, $20 door     # any string here
 image: /assets/images/flyer.jpg  # path to event flyer
 hiEventsID: 2                    # integer; event ID for HiEvents API (the integer in the event page URL)
+draft: false                     # if true, event excluded from production builds
 ---
 ```
 

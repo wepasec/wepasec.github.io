@@ -119,7 +119,10 @@
     "ws": "^8.19.0"
   },
   "scripts": {
-    "build": "npx @11ty/eleventy"
+    "build-dev": "npx @11ty/eleventy",
+    "build-prod": "cross-env ELEVENTY_ENV=production npx @11ty/eleventy",
+    "serve-prod": "cross-env ELEVENTY_ENV=production npx @11ty/eleventy --serve",
+    "serve-dev": "npx @11ty/eleventy --serve"
   },
   "repository": {
     "type": "git",
@@ -132,5 +135,8 @@
   "bugs": {
     "url": "https://github.com/wepasec/wepasec.github.io/issues"
   },
-  "homepage": "https://github.com/wepasec/wepasec.github.io#readme"
+  "homepage": "https://github.com/wepasec/wepasec.github.io#readme",
+  "devDependencies": {
+    "cross-env": "^10.1.0"
+  }
 }
