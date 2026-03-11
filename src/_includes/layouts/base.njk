@@ -6,24 +6,24 @@
 
     <title>{{ title | default(site.siteName) }}</title>
 
-    {% if description %}
+    {%- if description -%}
     <meta name="description" content="{{ description }}" />
-    {% endif %}
+    {%- endif -%}
 
     <link rel="icon" href="/assets/favicon.ico" />
     <link rel="stylesheet" href="/assets/style.css" />
 
     {# Open Graph / SEO #}
     <meta property="og:title" content="{{ title | default(site.siteName) }}" />
-    {% if description %}
+    {%- if description -%}
     <meta property="og:description" content="{{ description }}" />
-    {% endif %}
-    {% block headScripts %}{% endblock %}
+    {%- endif -%}
+    {%- block headScripts -%}{%- endblock -%}
   </head>
   <body>
-    {% include "navbar.njk" %}
+    {%- include "navbar.njk" -%}
     {{ content | safe }}
-    {% include "footer.njk" %}
-    {% block bodyScripts %}{% endblock %}
+    {%- include "footer.njk" -%}
+    {%- block bodyScripts -%}{%- endblock -%}
   </body>
 </html>
