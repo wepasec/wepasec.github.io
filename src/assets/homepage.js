@@ -94,8 +94,8 @@ const logosw = [
 const logo = {
   lines: logone,
   lineHeight: 12,
-  x: 50,
-  y: 100,
+  x: 30,
+  y: 30,
   vx: 2,
   vy: 2,
   color: '#ffffff',
@@ -122,11 +122,11 @@ function drawLogo() {
 
   // Logo sizing (smaller text on smaller screens)
   if (canvas.width < 480) {
-    logo.lineHeight = 8;
+    logo.lineHeight = 6;
   } else if (canvas.width < 768) {
-    logo.lineHeight = 10;
+    logo.lineHeight = 8;
   } else {
-    logo.lineHeight = 12;
+    logo.lineHeight = 10;
   }
 
   ctx.font = logo.lineHeight + 'px Courier';
