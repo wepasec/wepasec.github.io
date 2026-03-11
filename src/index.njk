@@ -2,7 +2,6 @@
 layout: layouts/base.njk
 title: COLLAPSE
 description: A SINGLE VOICE RAISES THE CLAMOR OF BEING.
-extraScript: /assets/homepage.js
 ---
 
 <div id="hero">
@@ -11,3 +10,7 @@ extraScript: /assets/homepage.js
     <canvas id="screen"></canvas>
   </div>
 </div>
+
+{%- block bodyScripts -%}
+<script src="/assets/homepage.js" defer></script>
+{%- endblock -%}

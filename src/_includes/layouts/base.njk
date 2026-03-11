@@ -18,12 +18,12 @@
     {% if description %}
     <meta property="og:description" content="{{ description }}" />
     {% endif %}
+    {% block headScripts %}{% endblock %}
   </head>
   <body>
-    {% include "navbar.njk" %} {{ content | safe }} {% include "footer.njk" %}
-    
-    {% if extraScript %}
-    <script src="{{ extraScript }}" defer></script>
-    {% endif %}
+    {% include "navbar.njk" %}
+    {{ content | safe }}
+    {% include "footer.njk" %}
+    {% block bodyScripts %}{% endblock %}
   </body>
 </html>

@@ -18,13 +18,13 @@ Each event is defined by a markdown file in `src/events/`, which should be named
 
 ```yaml
 ---
-title: The Event Name              # string; name of event
-date: 2026-03-07                   # YYYY-MM-DD format event date
-start: 9:00 PM                     # string; start time of the event
-end: LATE                          # string; end time of the event
-price: $15 advance, $20 door       # any string here
-image: /assets/images/flyer.jpg    # path to event flyer
-tickets: https://example.com       # url; specific link to buy event tickets 
+title: The Event Name            # string; name of event
+date: 2026-03-07                 # YYYY-MM-DD format event date
+start: 9:00 PM                   # string; start time of the event
+end: LATE                        # string; end time of the event
+price: $15 advance, $20 door     # any string here
+image: /assets/images/flyer.jpg  # path to event flyer
+hiEventsID: 2                    # integer; event ID for HiEvents API (the integer in the event page URL)
 ---
 ```
 

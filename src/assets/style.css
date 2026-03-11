@@ -178,3 +178,41 @@ footer a:hover {
     height: auto;
   }
 }
+
+.popup-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: none;
+  /* hide popup on page load, script changes on button click */
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  z-index: 9999;
+}
+
+.popup-content {
+  background: white;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  border-radius: 8px;
+  border: 3px solid #fff;
+  overflow-y: auto;
+  /* scroll if content too tall */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.popup-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 20px;
+  border: none;
+  color: #fff;
+  background: none;
+  cursor: pointer;
+  padding: 8px;
+}

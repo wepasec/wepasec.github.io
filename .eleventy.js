@@ -3,6 +3,7 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("./src/assets/images");
   eleventyConfig.addPassthroughCopy("./src/assets/style.css");
   eleventyConfig.addPassthroughCopy("./src/assets/homepage.js");
+  eleventyConfig.addPassthroughCopy("./src/assets/popup.js");
 
   // Base events collection
   eleventyConfig.addCollection("events", function (collectionApi) {
