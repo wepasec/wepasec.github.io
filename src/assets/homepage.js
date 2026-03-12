@@ -129,7 +129,7 @@ function drawLogo() {
     logo.lineHeight = 10;
   }
 
-  ctx.font = logo.lineHeight + 'px Courier';
+  ctx.font = logo.lineHeight + 'px IBM Plex Mono, monospace';
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
 
