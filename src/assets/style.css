@@ -107,9 +107,10 @@ footer a:hover {
 
 
 .main-container {
-  margin-top: 2rem;
   display: grid;
-  gap: 1.5rem;
+  width: 100%;
+  padding: 1rem;
+  margin: 0;
 }
 
 .event-card {
@@ -121,6 +122,7 @@ footer a:hover {
   border-radius: 8px;
   max-width: 600px;
   background: #111;
+  margin-top: 1.5rem;
 }
 
 .event-thumb {
@@ -160,9 +162,9 @@ footer a:hover {
   background-color: #c1121f;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .main-container {
-    max-width: 60%;
+    max-width: 70ch;
     margin: 0 auto;
   }
 }
@@ -176,6 +178,8 @@ footer a:hover {
   .event-thumb {
     width: 100%;
     height: auto;
+    max-height: 500px;
+    object-fit: cover;
   }
 }
 

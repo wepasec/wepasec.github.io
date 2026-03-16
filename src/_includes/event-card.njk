@@ -12,7 +12,16 @@
     </p>
     <p class="event-price"><strong>Tickets:</strong> {{ event.data.price }}</p>
     {%- if event.data.upcoming -%}
-    <a href="#" class="event-button open-popup"> Buy Tickets </a>
+    {%- if event.content -%}
+    <p class="event-description">{{ event.content | safe }}</p>
+    {%- endif -%}
+    <a href="#" class="event-button open-popup">
+      {%- if event.data.buttonText -%}
+        {{ event.data.buttonText }}
+      {%- else -%}
+        Buy Tickets
+      {%- endif -%}
+    </a>
     <div class="popup-overlay">
       <div class="popup-content">
         <button class="popup-close">✕</button>
