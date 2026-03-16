@@ -113,7 +113,6 @@ footer a:hover {
 .main-container {
   display: grid;
   width: 100%;
-  padding: 1rem;
   margin: 0;
 }
 
