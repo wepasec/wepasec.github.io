@@ -14,6 +14,10 @@ body {
   flex-direction: column;
 }
 
+body a {
+  color: rgba(255, 255, 255, 0.9);
+}
+
 #hero {
   position: relative;
   width: 100%;
