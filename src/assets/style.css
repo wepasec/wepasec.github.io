@@ -82,6 +82,7 @@ canvas {
 #content {
   padding: 24px;
   box-sizing: border-box;
+  width: 100%;
 }
 
 footer {
@@ -125,7 +126,7 @@ footer a:hover {
   border-radius: 8px;
   max-width: 600px;
   background: #111;
-  margin-top: 1.5rem;
+  margin: 1.5rem auto 0 auto;
 }
 
 .event-thumb {
