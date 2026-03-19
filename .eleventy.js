@@ -1,3 +1,5 @@
+const { eleventyImageTransformPlugin } = require("@11ty/eleventy-img");
+
 module.exports = function (eleventyConfig) {
   const isProd = process.env.ELEVENTY_ENV === "production";
   // Pass through static assets
@@ -9,6 +11,9 @@ module.exports = function (eleventyConfig) {
   // Pass through additional assets outside of production builds
   if (!isProd) {
     eleventyConfig.addPassthroughCopy("src/assets/dev");
+  } else {
+    // Transform any <img> or <picture> with eleventy-img
+    eleventyConfig.addPlugin(eleventyImageTransformPlugin);
   }
 
   // Function builds, filters, and sorts an events collection
