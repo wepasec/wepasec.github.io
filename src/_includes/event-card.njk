@@ -12,7 +12,7 @@
     </p>
     <p class="event-price"><strong>Tickets:</strong> {{ event.data.price }}</p>
     {%- if event.data.upcoming -%} {%- if event.content -%}
-    <p class="event-description">{{ event.content | safe }}</p>
+    <div class="event-description">{{ event.content | safe }}</div>
     {%- endif -%}
     <a href="#" class="event-button open-popup">
       {%- if event.data.buttonText -%} {{ event.data.buttonText }} {%- else -%}
@@ -36,7 +36,7 @@
           {%- if event.data.hieventsID == 1 -%}
           data-hievents-continue-button-text="DO, AND BY DOING, SEE"
           {%- else -%}
-          data-hievents-continue-button-text="Continue"
+          data-hievents-continue-button-text="CONTINUE"
           {%- endif -%}
           class="hievents-widget"
         ></div>
