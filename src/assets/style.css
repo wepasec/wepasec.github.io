@@ -153,7 +153,7 @@ footer a:hover {
 }
 
 .event-description {
-  font-weight: 300;
+  /* font-weight: 300; */
   font-family: 'Outfit', sans-serif;
   color: #ececec;
 }
