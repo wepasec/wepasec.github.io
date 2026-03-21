@@ -14,15 +14,11 @@
     {%- if event.data.upcoming -%} {%- if event.content -%}
     <div class="event-description">{{ event.content | safe }}</div>
     {%- endif -%}
-    <a href="https://tix.collapsepgh.com/event/2/repeat-offender-azrael-enema" class="event-button">
+    <a href="#" class="event-button open-popup">
       {%- if event.data.buttonText -%} {{ event.data.buttonText }} {%- else -%}
       Buy Tickets {%- endif -%}
     </a>
-    {# <a href="#" class="event-button open-popup">
-      {%- if event.data.buttonText -%} {{ event.data.buttonText }} {%- else -%}
-      Buy Tickets {%- endif -%}
-    </a> #}
-    {# <div class="popup-overlay">
+    <div class="popup-overlay">
       <div class="popup-content">
         <button class="popup-close">✕</button>
         <div
@@ -45,7 +41,7 @@
           class="hievents-widget"
         ></div>
       </div>
-    </div> #}
+    </div>
     {%- endif -%}
   </div>
 </div>
