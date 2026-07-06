@@ -14,6 +14,7 @@
     {%- if event.data.upcoming -%} {%- if event.content -%}
     <div class="event-description">{{ event.content | safe }}</div>
     {%- endif -%}
+    {%- if event.data.hieventsID -%}
     <a href="#" class="event-button open-popup">
       {%- if event.data.buttonText -%} {{ event.data.buttonText }} {%- else -%}
       Buy Tickets {%- endif -%}
@@ -41,7 +42,8 @@
           class="hievents-widget"
         ></div>
       </div>
-    </div>
+    </div>]
+    {%- endif -%}
     {%- endif -%}
   </div>
 </div>
