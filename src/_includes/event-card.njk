@@ -8,7 +8,7 @@
     <h2 class="event-title">{{ event.data.title }}</h2>
     <p class="event-date"><strong>Date:</strong> {{ event.data.dateString }}</p>
     <p class="event-time">
-      <strong>Time:</strong> {{ event.data.start }} – {{ event.data.end }}
+      <strong>Time:</strong> {{ event.data.start }} {%- if event.data.end %} – {{ event.data.end }} {%- else -%} {%- endif -%}
     </p>
     <p class="event-price"><strong>Tickets:</strong> {{ event.data.price }}</p>
     {%- if event.data.upcoming -%} {%- if event.content -%}
