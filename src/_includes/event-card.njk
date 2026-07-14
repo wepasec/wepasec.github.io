@@ -12,7 +12,10 @@
     </p>
     <p class="event-price"><strong>Tickets:</strong> {{ event.data.price }}</p>
     {%- if event.data.upcoming -%} {%- if event.content -%}
+    <div class="event-description-wrap">
     <div class="event-description">{{ event.content | safe }}</div>
+    <button class="event-description-toggle" type="button">Show more</button>
+    </div>
     {%- endif -%}
     {%- if event.data.hieventsID -%}
     <a href="#" class="event-button open-popup">
