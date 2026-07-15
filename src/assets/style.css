@@ -243,7 +243,6 @@ footer a:hover {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.65);
-  display: none;
   /* hide popup on page load, script changes on button click */
   justify-content: center;
   align-items: center;
