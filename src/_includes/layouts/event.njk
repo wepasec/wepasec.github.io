@@ -1,6 +1,9 @@
 ---
 layout: layouts/base.njk
 ---
+{%- block headScripts -%}
+<script async src="https://tix.collapsepgh.com/widget.js"></script>
+{%- endblock -%}
 {%- set event = {
   data: {
     title: title,
