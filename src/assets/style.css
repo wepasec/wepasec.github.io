@@ -149,6 +149,15 @@ footer a:hover {
   font-family: 'Workbench', monospace;
 }
 
+.event-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.event-title a:hover {
+  text-decoration: underline;
+}
+
 .event-info p {
   margin: 2px 0;
 }

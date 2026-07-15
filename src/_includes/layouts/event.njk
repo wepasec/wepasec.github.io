@@ -1,0 +1,23 @@
+---
+layout: layouts/base.njk
+---
+{%- set event = {
+  data: {
+    title: title,
+    image: image,
+    dateString: dateString,
+    start: start,
+    end: end,
+    price: price,
+    upcoming: upcoming,
+    hieventsID: hieventsID,
+    buttonText: buttonText
+  },
+  content: content,
+  url: page.url
+} -%}
+{%- include "event-card.njk" -%}
+
+{%- block bodyScripts -%}
+{%- include "partials/event-scripts.njk" -%}
+{%- endblock -%}
