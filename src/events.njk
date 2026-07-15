@@ -20,18 +20,28 @@ description: A SINGLE VOICE WILL SOON RAISE THE CLAMOR OF BEING.
 {%- block bodyScripts -%}
 <script src="/assets/popup.js" defer></script>
 <script>
-document.querySelectorAll('.event-description-wrap').forEach((wrap) => {
-  const desc = wrap.querySelector('.event-description');
-  const btn = wrap.querySelector('.event-description-toggle');
+function checkOverflow() {
+  document.querySelectorAll('.event-description-wrap').forEach((wrap) => {
+    const desc = wrap.querySelector('.event-description');
+    const btn = wrap.querySelector('.event-description-toggle');
+    if (wrap.dataset.checked) return;
 
-  // only bother if content is actually taller than the collapsed max-height
-  if (desc.scrollHeight > desc.clientHeight + 4) {
-    btn.style.display = 'inline-block';
-    btn.addEventListener('click', () => {
-      const expanded = wrap.classList.toggle('expanded');
-      btn.textContent = expanded ? 'Show less' : 'Show more';
-    });
-  }
-});
+    if (desc.scrollHeight > desc.clientHeight + 4) {
+      wrap.classList.add('has-overflow');
+      btn.style.display = 'inline-block';
+      wrap.dataset.checked = 'true';
+      btn.addEventListener('click', () => {
+        const expanded = wrap.classList.toggle('expanded');
+        btn.textContent = expanded ? 'Show less' : 'Show more';
+      });
+    }
+  });
+}
+
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(checkOverflow);
+} else {
+  checkOverflow();
+}
 </script>
 {%- endblock -%}
