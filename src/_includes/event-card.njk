@@ -13,6 +13,7 @@
       <strong>Time:</strong> {{ event.data.start }} {%- if event.data.end %} – {{ event.data.end }} {%- else -%} {%- endif -%}
     </p>
     <p class="event-price"><strong>Tickets:</strong> {{ event.data.price }}</p>
+    <p class="event-policy"><strong>Admission:</strong> 21+</p>
     {%- if event.data.upcoming -%} {%- if event.content -%}
     <div class="event-description-wrap">
     <div class="event-description">{{ event.content | safe }}</div>
