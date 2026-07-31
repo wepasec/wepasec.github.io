@@ -8,9 +8,16 @@ module.exports = {
     eleventyComputed: {
         dateString: ({page}) => DateTime.fromJSDate(page.date, {zone: 'utc'}).toLocaleString(DateTime.DATE_FULL),
         slug: (data) => data.custom_permalink || data.page.fileSlug,
+        upcoming: (data) => {
+            const today = new Date();
+            today.setUTCHours(0, 0, 0, 0);
+            return new Date(data.date) >= today;
+        },
         permalink: (data) => {
             if (isProd && data.draft) return false;
-            return `/${data.custom_permalink || data.page.fileSlug}/`;
+            return data.upcoming
+                ? `/${data.slug}/`
+                : `/archive/${data.slug}/`;
         },
     },
 }

@@ -18,13 +18,8 @@ module.exports = function (eleventyConfig) {
 
   // Function builds, filters, and sorts an events collection
   function buildEvents(collectionApi) {
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
     let events = collectionApi.getFilteredByGlob("./src/events/*.md");
-    // Tag events as 'upcoming' based on current date/time
-    events.forEach(event => {
-      event.data.upcoming = new Date(event.data.date) >= today;
-    });
+    
     // For production, filter out draft/test events
     if (isProd) {
       events = events.filter(e => e.data.draft !== true);
