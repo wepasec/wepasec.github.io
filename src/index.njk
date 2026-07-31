@@ -1,16 +1,22 @@
 ---
-layout: layouts/base.njk
-title: COLLAPSE
-description: A SINGLE VOICE RAISES THE CLAMOR OF BEING.
+layout: layouts/main.njk
+title: upcoming events @ COLLAPSE
+description: A SINGLE VOICE WILL SOON RAISE THE CLAMOR OF BEING.
 ---
+{%- block headScripts -%}
+<script async src="https://tix.collapsepgh.com/widget.js"></script>
+{%- endblock -%}
 
-<div id="hero">
-  <div id="wrapper">
-    <div id="bg-text"></div>
-    <canvas id="screen"></canvas>
-  </div>
-</div>
+<h1>Upcoming Events</h1>
+
+{%- if collections.upcomingevents | length > 0 -%}
+  {%- for event in collections.upcomingevents -%}
+    {%- include "event-card.njk" -%}
+  {%- endfor -%}
+{%- else -%}
+  <p>None yet announced... stay tuned.</p>
+{%- endif -%}
 
 {%- block bodyScripts -%}
-<script src="/assets/homepage.js" defer></script>
+{%- include "partials/event-scripts.njk" -%}
 {%- endblock -%}

@@ -1,0 +1,11 @@
+---
+pagination:
+  data: collections.events
+  size: 1
+  alias: event
+layout: layouts/redirect.njk
+eleventyExcludeFromCollections: true
+eleventyComputed:
+  permalink: "/events/{{ event.data.slug }}/index.html"
+  redirectTo: "/{{ event.data.slug }}/"
+---

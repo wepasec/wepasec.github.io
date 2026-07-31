@@ -7,14 +7,10 @@ module.exports = {
     tags: ["events"],
     eleventyComputed: {
         dateString: ({page}) => DateTime.fromJSDate(page.date, {zone: 'utc'}).toLocaleString(DateTime.DATE_FULL),
+        slug: (data) => data.custom_permalink || data.page.fileSlug,
         permalink: (data) => {
-            if (isProd && data.draft === true) {
-                return false;
-            }
-            if (data.custom_permalink) {
-                return `/events/${data.custom_permalink}/`;
-            }
-            return undefined; // falls back to default filename-based permalink
-        }
-    }
+            if (isProd && data.draft) return false;
+            return `/${data.custom_permalink || data.page.fileSlug}/`;
+        },
+    },
 }
