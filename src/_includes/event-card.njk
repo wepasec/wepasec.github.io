@@ -13,17 +13,30 @@
       <strong>Time:</strong> {{ event.data.start }} {%- if event.data.end %} – {{ event.data.end }} {%- else -%} {%- endif -%}
     </p>
     <p class="event-price"><strong>Tickets:</strong> {{ event.data.price }}</p>
-    <p class="event-policy"><strong>Admission:</strong> 21+</p>
-    {%- if event.data.upcoming -%} {%- if event.content -%}
+    {%- if event.data.upcoming -%}
+    <p class="event-policy"><strong>Admission:</strong>
+      {%- if event.data.hieventsID == 6 %}
+        ALL OF US
+      {%- else %}
+        21+
+      {%- endif -%}
+    </p>
+    {%- endif -%}
+
+    {%- if event.content -%}
     <div class="event-description-wrap">
     <div class="event-description">{{ event.content | safe }}</div>
     <button class="event-description-toggle" type="button">Show more</button>
     </div>
     {%- endif -%}
-    {%- if event.data.hieventsID -%}
+    
+    {%- if event.data.upcoming and event.data.hieventsID -%}
     <a href="#" class="event-button open-popup">
-      {%- if event.data.buttonText -%} {{ event.data.buttonText }} {%- else -%}
-      Buy Tickets {%- endif -%}
+      {%- if event.data.buttonText -%}
+        {{ event.data.buttonText }}
+      {%- else -%}
+        Buy Tickets
+      {%- endif -%}
     </a>
     <div class="popup-overlay">
       <div class="popup-content">
@@ -40,8 +53,8 @@
           data-hievents-locale="en"
           data-hievents-padding="20px"
           data-hievents-autoresize="true"
-          {%- if event.data.hieventsID == 1 -%}
-          data-hievents-continue-button-text="DO, AND BY DOING, SEE"
+          {%- if event.data.hieventsID == 6 -%}
+          data-hievents-continue-button-text="DO! AND BY DOING, SEE!"
           {%- else -%}
           data-hievents-continue-button-text="CONTINUE"
           {%- endif -%}
@@ -49,7 +62,6 @@
         ></div>
       </div>
     </div>
-    {%- endif -%}
     {%- endif -%}
   </div>
 </div>
