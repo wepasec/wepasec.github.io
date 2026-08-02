@@ -10,10 +10,10 @@
     </h2>
     <p class="event-date"><strong>Date:</strong> {{ event.data.dateString }}</p>
     <p class="event-time">
-      <strong>Time:</strong> {{ event.data.start }} {%- if event.data.end %} – {{ event.data.end }} {%- else -%} {%- endif -%}
+      <strong>Time:</strong> {{ event.data.start }} {%- if event.data.end and event.data.upcoming %} – {{ event.data.end }} {%- else -%} {%- endif -%}
     </p>
-    <p class="event-price"><strong>Tickets:</strong> {{ event.data.price }}</p>
     {%- if event.data.upcoming -%}
+    <p class="event-price"><strong>Tickets:</strong> {{ event.data.price }}</p>
     <p class="event-policy"><strong>Admission:</strong>
       {%- if event.data.hieventsID == 6 %}
         ALL OF US
@@ -23,7 +23,7 @@
     </p>
     {%- endif -%}
 
-    {%- if event.content -%}
+    {%- if event.content and event.data.upcoming -%}
     <div class="event-description-wrap">
     <div class="event-description">{{ event.content | safe }}</div>
     <button class="event-description-toggle" type="button">Show more</button>
