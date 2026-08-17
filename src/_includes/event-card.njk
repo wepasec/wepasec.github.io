@@ -17,6 +17,8 @@
     <p class="event-policy"><strong>Admission:</strong>
       {%- if event.data.hieventsID == 6 %}
         ALL OF US
+      {%- elif event.data.allages %}
+        All Ages
       {%- else %}
         21+
       {%- endif -%}
