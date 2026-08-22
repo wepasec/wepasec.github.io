@@ -30,6 +30,8 @@ image: /assets/images/flyer.jpg  # path to event flyer
 hiEventsID: 2                    # integer; event ID for HiEvents API (the integer in the event page URL)
 draft: false                     # if true, event excluded from production builds
 custom_permalink: event-name     # Site gets a dedicated page at https://collapsepgh.com/events/<permalink>; OPTIONAL, defaults to /events/<filename> otherwise.
+buttonText: Advance Donation     # Overrides "Buy Tickets" text on the button; OPTIONAL
+allages: true                    # If provided and `true`, replaces "21+" with "All Ages"; OPTIONAL
 ---
 ```
 
