@@ -14,15 +14,7 @@
     </p>
     {%- if event.data.upcoming -%}
     <p class="event-price"><strong>Tickets:</strong> {{ event.data.price }}</p>
-    <p class="event-policy"><strong>Admission:</strong>
-      {%- if event.data.hieventsID == 6 %}
-        ALL OF US
-      {%- elif event.data.allages %}
-        All Ages
-      {%- else %}
-        21+
-      {%- endif -%}
-    </p>
+    <p class="event-policy"><strong>Admission:</strong> {{ event.data.admission }}</p>
     {%- endif -%}
 
     {%- if event.content and event.data.upcoming -%}

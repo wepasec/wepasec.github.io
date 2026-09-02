@@ -23,6 +23,7 @@ Each event is defined by a markdown file in `src/events/`, which should be named
 ---
 title: The Event Name            # string; name of event
 date: 2026-03-07                 # YYYY-MM-DD format event date
+admission: 21+                   # "21+", "18+", "All Ages" etc
 start: 9:00 PM                   # string; start time of the event
 end: LATE                        # string; end time of the event; OPTIONAL
 price: $15 advance, $20 door     # any string here
@@ -31,7 +32,6 @@ hiEventsID: 2                    # integer; event ID for HiEvents API (the integ
 draft: false                     # if true, event excluded from production builds
 custom_permalink: event-name     # Site gets a dedicated page at https://collapsepgh.com/events/<permalink>; OPTIONAL, defaults to /events/<filename> otherwise.
 buttonText: Advance Donation     # Overrides "Buy Tickets" text on the button; OPTIONAL
-allages: true                    # If provided and `true`, replaces "21+" with "All Ages"; OPTIONAL
 ---
 ```
 
