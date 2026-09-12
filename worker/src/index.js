@@ -1,10 +1,11 @@
 // Cloudflare Worker: mailing list signup -> Resend Contacts API
 //
-// Env vars required (set as secrets):
+// Env vars required:
 //   RESEND_API_KEY     - your Resend API key (re_xxxxxxxxx)
 //   RESEND_SEGMENT_ID  - the segment UUID every website-form signup joins
-//   ALLOWED_ORIGIN     - the exact HTTPS origin allowed to call this worker,
-//                        e.g. "https://yourusername.github.io"
+//   ALLOWED_ORIGIN     - the exact origin allowed to call this worker,
+//                        e.g. "http://localhost:8080" in development
+//                        or "https://yourusername.github.io" in production
 
 const RESEND_CONTACTS_URL = "https://api.resend.com/contacts";
 
@@ -72,10 +73,20 @@ function isPlainObject(value) {
 
 
 /**
- * Validate that the configured origin is a single valid HTTPS origin.
+ * Validate the configured origin.
  *
- * This prevents accidentally configuring ALLOWED_ORIGIN with a path,
- * query string, credentials, or other unexpected URL components.
+ * The environment variable is the source of truth for which origin is
+ * allowed. This function only verifies that it is a syntactically valid
+ * HTTP(S) origin.
+ *
+ * Examples:
+ *   http://localhost:8080              -> valid
+ *   https://yourusername.github.io     -> valid
+ *
+ * Examples rejected:
+ *   https://example.com/path            -> invalid
+ *   https://example.com?foo=bar        -> invalid
+ *   not-an-origin                       -> invalid
  */
 function isValidOrigin(value) {
   if (typeof value !== "string" || value.length === 0) {
@@ -86,7 +97,7 @@ function isValidOrigin(value) {
     const url = new URL(value);
 
     return (
-      url.protocol === "https:" &&
+      (url.protocol === "https:" || url.protocol === "http:") &&
       url.origin === value &&
       url.username === "" &&
       url.password === "" &&
@@ -179,9 +190,7 @@ export default {
       if (request.method === "OPTIONS") {
         // CORS preflight.
         //
-        // We intentionally don't require the Origin check here because
-        // browsers send OPTIONS as the preflight request. The actual
-        // POST below is strictly origin-checked.
+        // The actual POST is strictly origin-checked below.
         return new Response(null, {
           status: 204,
           headers: corsHeaders(env),
@@ -189,7 +198,11 @@ export default {
       }
 
       if (request.method !== "POST") {
-        return json({ error: "Method not allowed" }, 405, env);
+        return json(
+          { error: "Method not allowed" },
+          405,
+          env
+        );
       }
 
 
@@ -229,18 +242,23 @@ export default {
       // ---------------------------------------------------------------
       //
       // CORS response headers alone do NOT prevent someone from directly
-      // calling the Worker with curl, another server, etc.
+      // calling the Worker.
       //
-      // We therefore explicitly require an exact Origin match for POST.
+      // Require the browser's Origin header to exactly match the configured
+      // ALLOWED_ORIGIN.
       //
       // Note: Origin is not cryptographic authentication. A non-browser
-      // client can forge it. It does, however, prevent browsers on other
-      // origins from successfully using this endpoint as intended.
+      // client can forge it. It does prevent ordinary cross-origin browser
+      // requests from other origins.
 
       const origin = request.headers.get("Origin");
 
       if (origin !== env.ALLOWED_ORIGIN) {
-        return json({ error: "Forbidden" }, 403, env);
+        return json(
+          { error: "Forbidden" },
+          403,
+          env
+        );
       }
 
 
@@ -267,9 +285,8 @@ export default {
       // Content-Length
       // ---------------------------------------------------------------
       //
-      // This is an early rejection optimization. The actual body size is
-      // checked again after reading the body because Content-Length should
-      // not be treated as the sole enforcement mechanism.
+      // Early rejection optimization. The actual body size is checked
+      // again after reading the body.
 
       const contentLength = request.headers.get("Content-Length");
 
@@ -294,10 +311,6 @@ export default {
       // ---------------------------------------------------------------
       // Read and enforce actual body size
       // ---------------------------------------------------------------
-      //
-      // The payload is tiny, so buffering at most 10 KB is appropriate.
-      // arrayBuffer().byteLength gives us an actual byte-level limit rather
-      // than relying on Content-Length.
 
       let rawBody;
 
@@ -379,8 +392,7 @@ export default {
       // Validate raw values
       // ---------------------------------------------------------------
       //
-      // Validate raw lengths BEFORE normalization so a huge attacker-
-      // controlled string cannot make it through to later processing.
+      // Validate lengths BEFORE normalization.
 
       if (
         typeof email !== "string" ||
@@ -501,10 +513,10 @@ export default {
           signal: controller.signal,
         });
       } catch (err) {
-        // Log the actual error server-side, but don't expose details
-        // to the public client.
         console.error("Failed to reach Resend", {
-          name: err instanceof Error ? err.name : "UnknownError",
+          name: err instanceof Error
+            ? err.name
+            : "UnknownError",
         });
 
         return json(
@@ -522,16 +534,14 @@ export default {
       // Resend response
       // ---------------------------------------------------------------
       //
-      // We intentionally do not expose or log the complete upstream
-      // response. Resend's response may contain implementation details
-      // or information that shouldn't be passed to/logged by the Worker.
-
-      let data = {};
+      // We intentionally don't expose or log the complete upstream
+      // response.
 
       try {
-        data = await resendResp.json();
+        await resendResp.arrayBuffer();
       } catch {
-        data = {};
+        // Ignore response-body read errors here. The HTTP status is
+        // sufficient for deciding whether the operation succeeded.
       }
 
 
@@ -541,9 +551,11 @@ export default {
       // ---------------------------------------------------------------
 
       if (!resendResp.ok) {
-        // A 409 means the contact already exists. Treat it as success
-        // externally so the endpoint does not reveal whether an email
-        // address is already subscribed.
+        // A 409 means the contact already exists.
+        //
+        // Treat it as success externally so the endpoint does not reveal
+        // whether a particular email address is already subscribed.
+
         if (resendResp.status === 409) {
           return json(
             {
@@ -554,7 +566,6 @@ export default {
           );
         }
 
-        // Log only controlled diagnostic information.
         console.error("Resend API error", {
           status: resendResp.status,
         });
@@ -571,9 +582,6 @@ export default {
       // ---------------------------------------------------------------
       // Success
       // ---------------------------------------------------------------
-      //
-      // Return only what the frontend needs. Never forward the complete
-      // Resend response.
 
       return json(
         {
@@ -589,7 +597,9 @@ export default {
       // ---------------------------------------------------------------
 
       console.error("Unexpected Worker error", {
-        name: err instanceof Error ? err.name : "UnknownError",
+        name: err instanceof Error
+          ? err.name
+          : "UnknownError",
       });
 
       return json(
