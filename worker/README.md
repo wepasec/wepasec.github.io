@@ -50,6 +50,10 @@ so you can filter/target signups from this form specifically in Resend.
 
 ## 4. Test locally (optional)
 
+Rename `.dev.vars.example` to `.dev.vars` and add a Resend API key. The dev/local
+worker will write new signups to a "Dev" segment in Resend instead of the actual
+mailing list.
+
 ```bash
 npm run dev
 ```
