@@ -1,0 +1,57 @@
+---
+layout: layouts/main.njk
+title: email signup
+description: YOUR SINGLE VOICE JOINS THE CLAMOR OF BEING.
+---
+
+<div class="signup-page">
+  <form id="signup-form">
+    <input type="text" id="firstName" placeholder="First name" required />
+    <input type="text" id="lastName" placeholder="Last name" required />
+    <input type="email" id="email" placeholder="you@example.com" required />
+    <button type="submit">Subscribe</button>
+  </form>
+
+  <p id="signup-message"></p>
+</div>
+
+<script>
+  const WORKER_URL = "https://resend-signup-worker.anthonyrom.workers.dev/";
+
+  document.getElementById("signup-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const firstName = document.getElementById("firstName").value.trim();
+    const lastName = document.getElementById("lastName").value.trim();
+    const email = document.getElementById("email").value;
+    const msg = document.getElementById("signup-message");
+    const button = e.target.querySelector("button");
+
+    button.disabled = true;
+    msg.textContent = "Submitting...";
+
+    try {
+      const res = await fetch(WORKER_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, firstName, lastName }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        msg.textContent = data.alreadySubscribed
+          ? "You're already on the list!"
+          : "Thanks for subscribing!";
+        e.target.reset();
+      } else {
+        msg.textContent =
+          data.error || "Something went wrong. Please try again.";
+      }
+    } catch {
+      msg.textContent = "Something went wrong. Please try again.";
+    } finally {
+      button.disabled = false;
+    }
+  });
+</script>
