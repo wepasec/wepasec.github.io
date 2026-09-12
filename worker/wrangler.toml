@@ -1,0 +1,13 @@
+name = "resend-signup-worker"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+preview_urls = false
+workers_dev = true
+
+# Non-secret config can go here. ALLOWED_ORIGIN is not sensitive,
+# so it's fine as a plain var (override per-environment if you like).
+[vars]
+ALLOWED_ORIGIN = "https://collapsepgh.com"
+
+# RESEND_API_KEY and RESEND_SEGMENT_ID are set as encrypted secrets,
+# NOT here. See README.md for the wrangler secret commands.
