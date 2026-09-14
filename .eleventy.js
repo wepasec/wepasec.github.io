@@ -7,6 +7,7 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("./src/assets/style.css");
   eleventyConfig.addPassthroughCopy("./src/assets/homepage.js");
   eleventyConfig.addPassthroughCopy("./src/assets/popup.js");
+  eleventyConfig.addPassthroughCopy("./src/assets/signup.js");
 
   // Pass through additional assets outside of production builds
   if (!isProd) {
