@@ -3,17 +3,21 @@ layout: layouts/main.njk
 title: COLLAPSE Mailing List
 description: YOUR SINGLE VOICE JOINS THE CLAMOR OF BEING.
 ---
+<h1>Mailing List</h1>
 
-<div class="signup-page">
-  <form id="signup-form">
-    <input type="text" id="firstName" placeholder="First name" required />
-    <input type="text" id="lastName" placeholder="Last name" required />
-    <input type="email" id="email" placeholder="you@example.com" required />
-    <button type="submit">Subscribe</button>
-  </form>
+<p>
+  Hand over your personal information using the form below.
+  In exchange, you'll receive infrequent emails about what's going on at COLLAPSE.
+</p>
 
-  <p id="signup-message"></p>
-</div>
+<form id="signup-form">
+  <input type="text" id="firstName" placeholder="First name" required />
+  <input type="text" id="lastName" placeholder="Last name" required />
+  <input type="email" id="email" placeholder="you@example.com" required />
+  <button type="submit">Subscribe</button>
+</form>
+
+<p id="signup-message"></p>
 
 {%- block bodyScripts -%}
 <script src="/assets/signup.js" defer></script>
