@@ -1,3 +1,5 @@
 ALLOWED_ORIGIN="http://localhost:8080"
 RESEND_SEGMENT_ID="5e1bb618-428f-4150-bc0e-571570fe1e8b"
 RESEND_API_KEY=""
+# if provided, send discord notifs for new signups
+DISCORD_WEBHOOK_URL=""
