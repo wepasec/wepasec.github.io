@@ -1,5 +1,5 @@
 name = "resend-signup-worker"
-main = "src/index.js"
+main = "worker.js"
 compatibility_date = "2026-09-01"
 preview_urls = false
 workers_dev = false
