@@ -204,10 +204,10 @@ async function notifyDiscordSignup(env, { email, firstName, lastName }) {
   const timeout = setTimeout(() => controller.abort(), DISCORD_TIMEOUT_MS);
 
   const payload = {
-    username: "Mailing List",
+    username: "THE UNIVERSAL OBSERVER [Mailing List]",
     embeds: [
       {
-        title: "New Signup",
+        title: "New Signup (website form)",
         color: 0x57F287, // green
         fields: [
           { name: "Name", value: `${firstName} ${lastName}`, inline: true },
