@@ -111,7 +111,7 @@ function buildDiscordPayload(payload) {
   }
 
   return {
-    username: "Resend",
+    username: "THE UNIVERSAL OBSERVER [Resend]",
     embeds: [
       {
         title: style.label,
