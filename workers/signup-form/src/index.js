@@ -6,6 +6,13 @@
 //   ALLOWED_ORIGIN     - the exact origin allowed to call this worker,
 //                        e.g. "http://localhost:8080" in development
 //                        or "https://yourusername.github.io" in production
+//
+// Env vars optional:
+//   DISCORD_WEBHOOK_URL - if set, posts a notification to this Discord
+//                         webhook whenever a NEW contact is added.
+//                         Duplicate signups (409 from Resend) do not
+//                         trigger a notification. If unset, notifications
+//                         are silently skipped.
 
 const RESEND_CONTACTS_URL = "https://api.resend.com/contacts";
 
@@ -13,6 +20,7 @@ const MAX_BODY_BYTES = 10_000;
 const MAX_EMAIL_LENGTH = 254;
 const MAX_NAME_LENGTH = 100;
 const RESEND_TIMEOUT_MS = 8_000;
+const DISCORD_TIMEOUT_MS = 5_000;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -180,8 +188,60 @@ function hasOnlyAllowedFields(body) {
 
 
 
+/**
+ * Best-effort Discord notification for a new mailing list signup.
+ *
+ * This is intentionally fire-and-forget from the caller's perspective:
+ * any failure here is logged and swallowed, never surfaced to the site
+ * visitor and never allowed to affect the signup outcome.
+ */
+async function notifyDiscordSignup(env, { email, firstName, lastName }) {
+  if (!env.DISCORD_WEBHOOK_URL) {
+    return;
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), DISCORD_TIMEOUT_MS);
+
+  const payload = {
+    username: "Mailing List",
+    embeds: [
+      {
+        title: "New Signup",
+        color: 0x57F287, // green
+        fields: [
+          { name: "Name", value: `${firstName} ${lastName}`, inline: true },
+          { name: "Email", value: email, inline: true },
+        ],
+        timestamp: new Date().toISOString(),
+      },
+    ],
+  };
+
+  try {
+    const resp = await fetch(env.DISCORD_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+
+    if (!resp.ok) {
+      console.error("Discord notification failed", { status: resp.status });
+    }
+  } catch (err) {
+    console.error("Failed to reach Discord", {
+      name: err instanceof Error ? err.name : "UnknownError",
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+
+
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     try {
       // ---------------------------------------------------------------
       // Method
@@ -555,6 +615,9 @@ export default {
         //
         // Treat it as success externally so the endpoint does not reveal
         // whether a particular email address is already subscribed.
+        //
+        // No Discord notification is sent in this case since it isn't a
+        // new signup.
 
         if (resendResp.status === 409) {
           return json(
@@ -576,6 +639,24 @@ export default {
           env
         );
       }
+
+
+
+      // ---------------------------------------------------------------
+      // Discord notification (new contact only)
+      // ---------------------------------------------------------------
+      //
+      // Runs after the response is prepared but doesn't block returning
+      // it to the site visitor. ctx.waitUntil keeps the Worker alive long
+      // enough for this to finish even after the response is sent.
+
+      ctx.waitUntil(
+        notifyDiscordSignup(env, {
+          email: normalizedEmail,
+          firstName: normalizedFirstName,
+          lastName: normalizedLastName,
+        })
+      );
 
 
 
