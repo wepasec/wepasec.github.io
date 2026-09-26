@@ -179,6 +179,87 @@ function hasOnlyAllowedFields(body) {
 }
 
 
+
+/**
+ * Fetch with a timeout, using AbortController.
+ *
+ * Centralizes the timeout/abort boilerplate so both the "does this contact
+ * already exist" check and the "create contact" call behave the same way.
+ */
+async function fetchWithTimeout(url, options, timeoutMs) {
+  const controller = new AbortController();
+
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, timeoutMs);
+
+  try {
+    return await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+
+
+/**
+ * Look up an existing Resend contact by email.
+ *
+ * Returns:
+ *   "exists"  - a contact with this email already exists
+ *   "absent"  - no contact with this email exists
+ *   "error"   - the lookup itself failed (network error or unexpected
+ *               upstream status); caller should fail the request rather
+ *               than guess.
+ */
+async function findExistingContact(normalizedEmail, env) {
+  let resp;
+
+  try {
+    resp = await fetchWithTimeout(
+      `${RESEND_CONTACTS_URL}/${encodeURIComponent(normalizedEmail)}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        },
+      },
+      RESEND_TIMEOUT_MS
+    );
+  } catch (err) {
+    console.error("Failed to reach Resend (lookup)", {
+      name: err instanceof Error ? err.name : "UnknownError",
+    });
+
+    return "error";
+  }
+
+  // Drain the body; we only care about the status code.
+  try {
+    await resp.arrayBuffer();
+  } catch {
+    // Ignore response-body read errors here.
+  }
+
+  if (resp.status === 404) {
+    return "absent";
+  }
+
+  if (resp.ok) {
+    return "exists";
+  }
+
+  console.error("Resend API error (lookup)", {
+    status: resp.status,
+  });
+
+  return "error";
+}
+
+
 export default {
   async fetch(request, env, ctx) {
     try {
@@ -455,6 +536,39 @@ export default {
       }
 
       // ---------------------------------------------------------------
+      // Check for an existing contact first
+      // ---------------------------------------------------------------
+      //
+      // Resend's create-contact call can act as an upsert, replacing an
+      // existing contact's fields (name, unsubscribed status, segments,
+      // etc.) with whatever this request sent. To avoid clobbering a
+      // subscriber's existing record, look the contact up first and, if
+      // it already exists, leave it untouched.
+
+      const lookupResult = await findExistingContact(normalizedEmail, env);
+
+      if (lookupResult === "error") {
+        return json(
+          { error: "Unable to subscribe" },
+          502,
+          env
+        );
+      }
+
+      if (lookupResult === "exists") {
+        // Already subscribed. Report success without modifying the
+        // existing record, and without revealing anything about its
+        // current contents.
+        return json(
+          {
+            success: true,
+          },
+          200,
+          env
+        );
+      }
+
+      // ---------------------------------------------------------------
       // Resend payload
       // ---------------------------------------------------------------
 
@@ -479,22 +593,19 @@ export default {
 
       let resendResp;
 
-      const controller = new AbortController();
-
-      const timeout = setTimeout(() => {
-        controller.abort();
-      }, RESEND_TIMEOUT_MS);
-
       try {
-        resendResp = await fetch(RESEND_CONTACTS_URL, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${env.RESEND_API_KEY}`,
-            "Content-Type": "application/json",
+        resendResp = await fetchWithTimeout(
+          RESEND_CONTACTS_URL,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${env.RESEND_API_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
           },
-          body: JSON.stringify(payload),
-          signal: controller.signal,
-        });
+          RESEND_TIMEOUT_MS
+        );
       } catch (err) {
         console.error("Failed to reach Resend", {
           name: err instanceof Error
@@ -507,8 +618,6 @@ export default {
           502,
           env
         );
-      } finally {
-        clearTimeout(timeout);
       }
 
       // ---------------------------------------------------------------
@@ -530,10 +639,14 @@ export default {
       // ---------------------------------------------------------------
 
       if (!resendResp.ok) {
-        // A 409 means the contact already exists.
+        // A 409 means a contact with this email was created between our
+        // lookup and this create call (e.g. a concurrent signup).
         //
         // Treat it as success externally so the endpoint does not reveal
-        // whether a particular email address is already subscribed.
+        // whether a particular email address is already subscribed, and
+        // do NOT retry as an update — that contact already exists and
+        // should be left as-is, same as the lookupResult === "exists"
+        // case above.
 
         if (resendResp.status === 409) {
           return json(
