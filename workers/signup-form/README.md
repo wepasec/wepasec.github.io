@@ -1,7 +1,7 @@
 # Resend signup worker
 
-A minimal Cloudflare Worker that parses a form on the static site
-and updated the Resend mailing list.
+A Cloudflare Worker that parses a form on the static site and updates
+the Resend mailing list.
 
 ## Test locally
 
@@ -21,28 +21,24 @@ curl -X POST http://localhost:8787 \
   -d '{"email":"you@example.com"}'
 ```
 
-To test with the local dev static site, change the URL in signup.njk to `http://localhost:8787`. TODO- automate this!
+When testing with the local dev static site, run the Eleventy project in dev mode
+(`ELEVENTY_ENV != "production"`) and the local dev worker will spin up, and the
+URL used by the form will switch to the local version automatically.
 
 ## Deploy
+
+To deploy the changes to the actual Cloudflare worker:
 
 ```bash
 npm run deploy
 ```
 
-Wrangler will print your live URL, something like:
-
-```
-https://resend-signup-worker.your-subdomain.workers.dev
-```
-
 ## Notes
 
-- **Duplicate signups:** the worker treats Resend's 409 (contact already
-  exists) as a success response so users seeing "already subscribed" isn't
-  treated as an error.
-- **Swapping in the Resend SDK:** the worker currently calls Resend's REST
-  API directly with `fetch` to avoid npm dependency overhead.
-  To use the official `resend` SDK, enable Node compatibility in
-  `wrangler.toml` (`compatibility_flags = ["nodejs_compat"]`), run
-  `npm install resend`, and swap the `fetch` block in `src/index.js` for
-  the SDK call
+- **Writes to Resend** even in `dev` mode: you will want to manually clear out
+  the `Dev` mailing list segment in Resend once you're done testing.
+- **Duplicate signups:** if someone is already subscribed, the worker will not update their
+  entry. This lets them retain "OG clout" within the mailing list `from_event` field- their
+  oldest is retained. Whether someone is newly added or already exists, the displayed message
+  just tells them they are subscribed. This is a data privacy measure so that the form can't
+  be used to check whether someone is signed up.
