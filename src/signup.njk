@@ -20,5 +20,7 @@ description: YOUR SINGLE VOICE JOINS THE CLAMOR OF BEING.
 <p id="signup-message"></p>
 
 {%- block bodyScripts -%}
+{# Worker URL gets populated based on environment when site builds #}
+<script>window.SIGNUP_WORKER_URL = "{{ emailSignupWorkerUrl }}";</script>
 <script src="/assets/signup.js" defer></script>
 {%- endblock -%}

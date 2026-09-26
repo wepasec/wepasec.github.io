@@ -1,4 +1,4 @@
-const WORKER_URL = "https://api.collapsepgh.com/";
+const WORKER_URL = window.SIGNUP_WORKER_URL;
 
 document.getElementById("signup-form").addEventListener("submit", async (e) => {
     e.preventDefault();
