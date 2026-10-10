@@ -39,6 +39,7 @@ hiEventsID: 2                    # event ID for HiEvents API (get from event pag
 draft: false                     # if true, exclude from production builds
 custom_permalink: event-name     # Site's dedicated URL: collapsepgh.com/<permalink>; OPTIONAL, defaults: /events/<filename> otherwise.
 buttonText: Advance Donation     # Overrides "Buy Tickets" text on the button; OPTIONAL
+customButtonLink: https://...    # Make the button a simple link instead of HiEvents popup. Ignored if hiEventsId is set. 
 ---
 ```
 

@@ -57,5 +57,14 @@
       </div>
     </div>
     {%- endif -%}
+    {%- if event.data.upcoming and event.data.customButtonLink -%}
+    <a href="{{event.data.customButtonLink}}" class="event-button">
+      {%- if event.data.buttonText -%}
+        {{ event.data.buttonText }}
+      {%- else -%}
+        Buy Tickets
+      {%- endif -%}
+    </a>
+    {%- endif -%}
   </div>
 </div>
