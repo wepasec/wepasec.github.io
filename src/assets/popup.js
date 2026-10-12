@@ -5,6 +5,10 @@ document.querySelectorAll(".event-card").forEach(card => {
     const popup = card.querySelector(".popup-content");
     const closeBtn = card.querySelector(".popup-close");
 
+    if (!openBtn || !overlay || !popup || !closeBtn) {
+        return;
+    }
+
     function closePopup() {
         overlay.style.display = "none";
         document.body.style.overflow = "";
