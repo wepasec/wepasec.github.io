@@ -40,6 +40,7 @@ draft: false                     # if true, exclude from production builds
 custom_permalink: event-name     # Site's dedicated URL: collapsepgh.com/<permalink>; OPTIONAL, defaults: /events/<filename> otherwise.
 buttonText: Advance Donation     # Overrides "Buy Tickets" text on the button; OPTIONAL
 customButtonLink: https://...    # Make the button a simple link instead of HiEvents popup. Ignored if hiEventsId is set. 
+hideFromFeed: true               # If set to true, make a page but don't show in the main events feed. Optional; false if not set.
 ---
 ```
 

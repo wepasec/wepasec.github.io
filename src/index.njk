@@ -11,7 +11,9 @@ description: A SINGLE VOICE RAISES THE CLAMOR OF BEING.
 
 {%- if collections.upcomingevents | length > 0 -%}
   {%- for event in collections.upcomingevents -%}
-    {%- include "event-card.njk" -%}
+    {%- if not event.data.hideFromFeed -%}
+      {%- include "event-card.njk" -%}
+    {%- endif -%}
   {%- endfor -%}
 {%- else -%}
   <p>None yet announced... stay tuned.</p>
