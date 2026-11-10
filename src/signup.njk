@@ -1,0 +1,26 @@
+---
+layout: layouts/main.njk
+title: COLLAPSE Mailing List
+description: YOUR SINGLE VOICE JOINS THE CLAMOR OF BEING.
+---
+<h1>Mailing List</h1>
+
+<p>
+  Hand over your personal information using the form below.
+  In exchange, you'll receive infrequent emails about what's going on at COLLAPSE.
+</p>
+
+<form id="signup-form">
+  <input type="text" id="firstName" placeholder="First name" required />
+  <input type="text" id="lastName" placeholder="Last name" required />
+  <input type="email" id="email" placeholder="you@example.com" required />
+  <button type="submit">Subscribe</button>
+</form>
+
+<p id="signup-message"></p>
+
+{%- block bodyScripts -%}
+{# Worker URL gets populated based on environment when site builds #}
+<script>window.SIGNUP_WORKER_URL = "{{ emailSignupWorkerUrl }}";</script>
+<script src="/assets/signup.js" defer></script>
+{%- endblock -%}

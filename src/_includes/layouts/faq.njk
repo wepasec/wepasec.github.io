@@ -1,0 +1,26 @@
+---
+layout: layouts/base.njk
+---
+
+<main id="content">
+  <div class="main-container faq-page">
+    {% if title %}<h1 class="faq-title">{{ title }}</h1>{% endif %}
+
+    {% if content %}
+    <div class="faq-intro">{{ content | safe }}</div>
+    {% endif %}
+
+    <div class="faq-list">
+      {% for item in faqs %}
+      <details class="faq-item">
+        <summary class="faq-question">
+          <span>{{ item.question }}</span>
+        </summary>
+        <div class="faq-answer">
+          {{ item.answer | safe }}
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+  </div>
+</main>

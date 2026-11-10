@@ -124,7 +124,7 @@
     "build-dev": "npx @11ty/eleventy",
     "build-prod": "cross-env ELEVENTY_ENV=production npx @11ty/eleventy",
     "serve-prod": "cross-env ELEVENTY_ENV=production npx @11ty/eleventy --serve",
-    "serve-dev": "npx @11ty/eleventy --serve"
+    "serve-dev": "concurrently -n 11ty,worker \"npx @11ty/eleventy --serve\" \"npm run dev --prefix workers/signup-form\""
   },
   "repository": {
     "type": "git",
@@ -139,6 +139,7 @@
   },
   "homepage": "https://github.com/wepasec/wepasec.github.io#readme",
   "devDependencies": {
+    "concurrently": "^10.0.5",
     "cross-env": "^10.1.0"
   }
 }

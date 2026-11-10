@@ -55,6 +55,12 @@ canvas {
   display: block;
 }
 
+#canvas-secret {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+
 #header-row {
   display: flex;
   justify-content: center;
@@ -125,7 +131,7 @@ footer a:hover {
   border: 1px solid #333;
   padding: 16px;
   border-radius: 8px;
-  max-width: 650px;
+  max-width: 725px;
   margin: 1.5rem auto 0 auto;
 }
 
@@ -171,7 +177,7 @@ footer a:hover {
   font-family: 'IBM Plex Mono', monospace;
   color: #ececec;
   max-height: 18em;
-  font-size: 0.9em;
+  font-size: 0.85em;
   overflow: hidden;
   transition: max-height 0.3s ease;
   position: relative;
@@ -226,7 +232,7 @@ footer a:hover {
 
 @media (min-width: 768px) {
   .main-container {
-    max-width: 700px;
+    max-width: 750px;
     margin: 0 auto;
   }
 }
@@ -262,7 +268,7 @@ footer a:hover {
 .popup-content {
   background: white;
   width: 100%;
-  max-width: 600px;
+  max-width: 650px;
   max-height: 90vh;
   border-radius: 8px;
   border: 3px solid #fff;
@@ -282,4 +288,190 @@ footer a:hover {
   background: none;
   cursor: pointer;
   padding: 8px;
+}
+
+.faq-page {
+  width: 100%;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 700px;
+  width: 100%;
+  margin: 1.5rem auto 0 auto;
+  box-sizing: border-box;
+}
+
+.faq-item {
+  border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+  background: transparent;
+  width: 100%;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.faq-question {
+  cursor: pointer;
+  padding: 14px 16px;
+  font-weight: 700;
+  font-family: 'IBM Plex Mono', monospace;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+  color: #fff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.faq-question::-webkit-details-marker {
+  display: none;
+}
+
+.faq-question::after {
+  content: "+";
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #e63946;
+  font-weight: bold;
+  transition: transform 0.2s ease;
+  margin-left: 1rem;
+  flex-shrink: 0;
+}
+
+.faq-item[open] .faq-question::after {
+  transform: rotate(45deg);
+}
+
+.faq-item[open] .faq-question {
+  border-bottom: 1px solid #333;
+}
+
+.faq-question:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.faq-answer {
+  padding: 14px 16px 16px;
+  color: #ececec;
+  font-size: 0.9em;
+  line-height: 1.6;
+}
+
+.faq-answer p {
+  margin: 0.5rem 0 0 0;
+}
+
+.faq-answer a {
+  color: #e63946;
+}
+
+.faq-answer a:hover {
+  text-decoration: underline;
+}
+
+#signup-form {
+  width: 100%;
+  max-width: 700px;
+  margin: 2rem auto 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+#signup-form input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  background: #000;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #fff;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.9rem;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+#signup-form input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+#signup-form input:hover {
+  border-color: #555;
+}
+
+#signup-form input:focus {
+  border-color: #e63946;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Email field spans both columns */
+#signup-form #email {
+  grid-column: 1 / -1;
+}
+
+#signup-form button {
+  align-self: flex-start;
+  justify-self: start;
+  margin-top: 4px;
+  padding: 0.7rem 1.4rem;
+  border: 1px solid #e63946;
+  border-radius: 4px;
+  background: #e63946;
+  color: #fff;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+#signup-form button:hover:not(:disabled) {
+  background: #c1121f;
+  border-color: #c1121f;
+}
+
+#signup-form button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+#signup-form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#signup-message {
+  width: 100%;
+  max-width: 700px;
+  margin: 16px auto 0;
+  box-sizing: border-box;
+  min-height: 1.6em;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 600px) {
+  #signup-form {
+    grid-template-columns: 1fr;
+    margin-top: 1.5rem;
+  }
+
+  #signup-form #email {
+    grid-column: auto;
+  }
+
+  #signup-form button {
+    width: 100%;
+  }
 }
