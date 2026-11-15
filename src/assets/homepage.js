@@ -2,8 +2,8 @@
     const canvas = document.getElementById("canvas-secret");
     const ctx = canvas.getContext("2d");
     const PHRASE = "COLLAPSE";
-    const DENSITY = 0.01;
-    const LETTER_DENSITY = DENSITY * 5;
+    const DENSITY = 0.007;
+    const LETTER_DENSITY = DENSITY * 3.5;
     const PARTICLE_SIZE = 1.6;
     const SPEED = 20;
     const DESKTOP_LAYOUT = { lines: [PHRASE], textWidth: 0.5, textHeight: 0.32 };
