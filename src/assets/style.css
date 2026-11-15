@@ -64,6 +64,7 @@ canvas {
 #header-row {
   display: flex;
   justify-content: center;
+  align-items: baseline;
   gap: 24px;
   padding: 16px 24px;
   box-sizing: border-box;
@@ -84,6 +85,12 @@ canvas {
 #header-row .nav-current {
   font-weight: bold;
   text-decoration: underline;
+}
+
+#header-row .nav-home {
+  font-family: 'Workbench', monospace;
+  position: relative;
+  top: 1px;
 }
 
 #content {
