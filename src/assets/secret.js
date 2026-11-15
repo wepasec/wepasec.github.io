@@ -6,7 +6,10 @@
     const LETTER_DENSITY = DENSITY * 5;
     const PARTICLE_SIZE = 1.6;
     const SPEED = 20;
-    const TEXT_WIDTH = 0.5;
+    const DESKTOP_LAYOUT = { lines: [PHRASE], textWidth: 0.5, textHeight: 0.32 };
+    const MOBILE_LAYOUT = { lines: ["CO", "LL", "AP", "SE"], textWidth: 0.6, textHeight: 0.6 };
+    const MOBILE_QUERY = window.matchMedia("(max-width: 600px)");
+    const LINE_SPACING = 1.25;
     const FONT_FAMILY = "Arial Black, Arial, Helvetica, sans-serif";
     const SAMPLE_STEP = 1;
     const maskCanvas = document.createElement("canvas");
@@ -17,36 +20,57 @@
     let particles = [];
     let letterLanes = [];
 
+    function currentLayout() {
+        return MOBILE_QUERY.matches ? MOBILE_LAYOUT : DESKTOP_LAYOUT;
+    }
+
     function buildLetterLanes() {
         maskCanvas.width = width;
         maskCanvas.height = height;
         maskCtx.clearRect(0, 0, width, height);
-        let fontSize = height * 0.32;
-        maskCtx.font = `900 ${fontSize}px ${FONT_FAMILY}`;
-        let metrics = maskCtx.measureText(PHRASE);
-        const targetWidth = width * TEXT_WIDTH;
-        if (metrics.width > targetWidth) {
-            fontSize *= targetWidth / metrics.width;
-            maskCtx.font = `900 ${fontSize}px ${FONT_FAMILY}`;
+        const layout = currentLayout();
+        const lines = layout.lines;
+        const setFont = (size) => {
+            maskCtx.font = `900 ${size}px ${FONT_FAMILY}`;
+        };
+        const widestLine = () => Math.max(...lines.map((line) => maskCtx.measureText(line).width));
+        let fontSize = height * layout.textHeight / lines.length;
+        setFont(fontSize);
+        const targetWidth = width * layout.textWidth;
+        const lineWidth = widestLine();
+        if (lineWidth > targetWidth) {
+            fontSize *= targetWidth / lineWidth;
+            setFont(fontSize);
         }
-        metrics = maskCtx.measureText(PHRASE);
-        const wordWidth = metrics.width;
-        const startX = (width - wordWidth) / 2;
-        const ascent = metrics.actualBoundingBoxAscent;
-        const descent = metrics.actualBoundingBoxDescent;
-        const baseline = height / 2 + (ascent - descent) / 2;
+        const phraseMetrics = maskCtx.measureText(PHRASE);
+        const ascent = phraseMetrics.actualBoundingBoxAscent;
+        const descent = phraseMetrics.actualBoundingBoxDescent;
+        const lineStep = (ascent + descent) * LINE_SPACING;
+        const blockHeight = lineStep * (lines.length - 1) + ascent + descent;
+        const firstBaseline = (height - blockHeight) / 2 + ascent;
         maskCtx.fillStyle = "#000";
         maskCtx.textBaseline = "alphabetic";
-        maskCtx.fillText(PHRASE, startX, baseline);
-        const pixels = maskCtx.getImageData(0, 0, width, height).data;
         letterLanes = [];
+        const placedLines = lines.map((line, index) => {
+            const startX = (width - maskCtx.measureText(line).width) / 2;
+            const baseline = firstBaseline + index * lineStep;
+            maskCtx.fillText(line, startX, baseline);
+            return { line, startX, baseline };
+        });
+        const pixels = maskCtx.getImageData(0, 0, width, height).data;
+        for (const { line, startX, baseline } of placedLines) {
+            collectLanes(line, startX, baseline, ascent, descent, pixels);
+        }
+    }
+
+    function collectLanes(line, startX, baseline, ascent, descent, pixels) {
         let cursorX = startX;
-        for (const character of PHRASE) {
+        for (const character of line) {
             const letterMetrics = maskCtx.measureText(character);
-            const letterLeft = Math.floor(cursorX);
-            const letterRight = Math.ceil(cursorX + letterMetrics.width);
-            const top = Math.floor(baseline - ascent);
-            const bottom = Math.ceil(baseline + descent);
+            const letterLeft = Math.max(0, Math.floor(cursorX));
+            const letterRight = Math.min(width, Math.ceil(cursorX + letterMetrics.width));
+            const top = Math.max(0, Math.floor(baseline - ascent));
+            const bottom = Math.min(height, Math.ceil(baseline + descent));
             for (let x = letterLeft; x < letterRight; x += SAMPLE_STEP) {
                 let runStart = -1;
                 for (let y = top; y < bottom; y += SAMPLE_STEP) {
